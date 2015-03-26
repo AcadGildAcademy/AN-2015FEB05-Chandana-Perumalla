@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:todoapp="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.chandana.todoapp">
+
+    <item android:id="@+id/add_new_task"
+        android:title="Add New Task"
+        android:icon="@drawable/add_new_task"
+        todoapp:showAsAction="always"/>
+
+    <item android:id="@+id/complete"
+        android:title="Completed Tasks"
+        android:icon="@drawable/complete"
+        todoapp:showAsAction="always"/>
+</menu>
