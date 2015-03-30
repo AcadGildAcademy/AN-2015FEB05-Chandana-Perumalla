@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,19 @@ public class main_activity extends ActionBarActivity {
     Helper helper;
     ListView listView;
     ArrayList<item> items;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        items = db.getAllTasks();
+        if(!items.isEmpty()) {
+            helper.sortTasks(items);
+            CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
+            listView.setAdapter(adapter);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,45 +94,17 @@ public class main_activity extends ActionBarActivity {
 
                            @Override
                            public void onClick(DialogInterface dialogInterface, int i) {
-                               title.addTextChangedListener(new TextWatcher() {
-                                   @Override
-                                   public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
-                                   }
+                             To_do_item.setTodo_title(title.getText().toString());
+                             To_do_item.setTodo_description(description.getText().toString());
+                             To_do_item.setTodo_date(helper.getDateString(datePicker));
 
-                                   @Override
-                                   public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                               db.updateTo_do_action(To_do_item);
+                               items = db.getAllTasks();
+                               helper.sortTasks(items);
+                               CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
+                               listView.setAdapter(adapter);
 
-                                   }
-
-                                   @Override
-                                   public void afterTextChanged(Editable editable) {
-                                       To_do_item.setTodo_title(title.getText().toString());
-                                   }
-                               });
-
-                               description.addTextChangedListener(new TextWatcher() {
-                                   @Override
-                                   public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-                                   }
-
-                                   @Override
-                                   public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-                                   }
-
-                                   @Override
-                                   public void afterTextChanged(Editable editable) {
-                                       To_do_item.setTodo_description(description.getText().toString());
-                                   }
-                               });
-
-                               datePicker.init(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth(), new OnDateChangedListener(){
-                                   public void onDateChanged (DatePicker view,int year, int month,int day){
-                                        To_do_item.setTodo_date(helper.getDateString(year,month,day));
-                                   }
-                               });
 
                            }
 
@@ -133,13 +119,14 @@ public class main_activity extends ActionBarActivity {
                        title.setText(To_do_item.getTodo_title());
                        description.setText(To_do_item.getTodo_description());
                        Date date = helper.getDate(To_do_item.getTodo_date());
-                       datePicker.updateDate(date.getYear(),date.getMonth(),date.getDay());
+                       Calendar cal = Calendar.getInstance();
+                       datePicker.updateDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
                        final AlertDialog dialog = AD.create();
                        dialog.show();
 
                }
                 db.updateTo_do_action(To_do_item);
-                ArrayList<item> items = db.getAllTasks();
+                items = db.getAllTasks();
                 helper.sortTasks(items);
                 CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
                 listView.setAdapter(adapter);
@@ -215,7 +202,7 @@ public class main_activity extends ActionBarActivity {
                         }
                         else {
                             db.addTodoAction (new item(t, des, helper.getDateString(datePicker), false));
-                            ArrayList<item> items = db.getAllTasks();
+                            items = db.getAllTasks();
                             helper.sortTasks(items);
                             CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
                             listView = (ListView) findViewById(R.id.to_do_list);

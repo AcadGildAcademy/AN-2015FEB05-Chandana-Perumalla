@@ -133,4 +133,29 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 cursor.getString(1), cursor.getString(2), cursor.getString(3),status);
          return To_do_item;
     }
+    public ArrayList<item> getAllCompletedTasks(){
+        ArrayList<item> To_Do_List = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID,
+                        KEY_TITLE, KEY_DESCRIPTION, KEY_DATE, KEY_STATUS }, KEY_STATUS + "=?",
+                new String[] { String.valueOf(1) }, null, null, null, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                item i = new item();
+                i.setId(Integer.parseInt(cursor.getString(0)));
+                i.setTodo_title(cursor.getString(1));
+                i.setTodo_description(cursor.getString(2));
+                i.setTodo_date(cursor.getString(3));
+                i.setTodo_action_status(Integer.parseInt(cursor.getString(4)));
+
+                To_Do_List.add(i);
+            } while (cursor.moveToNext());
+        }
+        return To_Do_List;
+
+    }
 }
