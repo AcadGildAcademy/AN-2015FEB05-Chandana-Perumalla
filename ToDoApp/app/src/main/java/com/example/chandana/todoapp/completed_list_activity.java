@@ -31,13 +31,16 @@ public class completed_list_activity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.to_do_list);
         helper = new Helper();
 
+
         items = db.getAllCompletedTasks();
+
         if(!items.isEmpty()) {
             helper.sortTasks(items);
 
             CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
             listView.setAdapter(adapter);
         }
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             @Override
@@ -50,6 +53,7 @@ public class completed_list_activity extends ActionBarActivity {
                     CustomAdapter adapter = new CustomAdapter(getApplicationContext(), items);
                     listView.setAdapter(adapter);
                 }
+                else{setContentView(R.layout.todo_launch);}
                 return true;
             }
         });
